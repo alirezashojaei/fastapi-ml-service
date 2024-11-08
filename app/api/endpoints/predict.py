@@ -5,10 +5,17 @@ from app.schemas.response_schemas import PredictResponse
 router = APIRouter()
 
 
-@router.post("/predict", response_model=PredictResponse)
+@router.post("/predict", response_model=PredictResponse, summary="Predict Insurance Cost", tags=["Prediction"])
 async def predict_cost(data: PredictRequest):
     """
-    Predict the health insurance premium cost based on user details.
+    Predicts the health insurance premium cost based on given parameters.
+
+    - **smoker**: Boolean, True for smoker, False for non-smoker.
+    - **bmi**: Body Mass Index as a float, typically between 0 and 100.
+    - **age**: Age as a positive integer between 0 and 120.
+    - **children**: Number of children as a non-negative integer.
+
+    Returns the predicted insurance cost.
     """
     # Mock prediction logic for demonstration purposes
     base_cost = 1000.0
