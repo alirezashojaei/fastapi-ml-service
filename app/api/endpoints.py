@@ -1,11 +1,12 @@
 from fastapi import APIRouter, HTTPException
 from app.db_control.crud_user import create_user
 from app.schemas.request_schemas import UserCreate
+from app.schemas.response_schemas import UserResponse
 
 router = APIRouter()
 
 
-@router.post("/create", response_model=UserCreate, status_code=201)
+@router.post("/create", response_model=UserResponse, status_code=201)
 async def create_user_endpoint(user_data: UserCreate):
     """
     Endpoint to create a new user.
