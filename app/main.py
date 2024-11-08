@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.db_control import models
 from app.db_control.session import engine
 
-from app.api import endpoints
+from app.api.endpoints import user, predict
 
 # Not for production, only for development. For production, a migration tool should be used.
 models.Base.metadata.create_all(bind=engine)
@@ -21,7 +21,10 @@ app.add_middleware(
 )
 
 # Include the user router
-app.include_router(endpoints.router, prefix="/api/users", tags=["Users"])
+app.include_router(user.router, prefix="/api/users", tags=["Users"])
+
+# Include the predict router
+app.include_router(predict.router, prefix="/api")
 
 
 @app.get("/api/healthcheck")
