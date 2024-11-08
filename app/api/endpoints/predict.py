@@ -1,8 +1,11 @@
 from fastapi import APIRouter
+
+from app.models.model_loader import load_model_and_transformer, predict_insurance_charges
 from app.schemas.request_schemas import PredictRequest
 from app.schemas.response_schemas import PredictResponse
 
 router = APIRouter()
+model, poly = load_model_and_transformer()
 
 
 @router.post("/predict", response_model=PredictResponse, summary="Predict Insurance Cost", tags=["Prediction"])
@@ -17,14 +20,12 @@ async def predict_cost(data: PredictRequest):
 
     Returns the predicted insurance cost.
     """
-    # Mock prediction logic for demonstration purposes
-    base_cost = 1000.0
-    age_factor = data.age * 20.0
-    bmi_factor = data.bmi * 10.0
-    smoker_factor = 500.0 if data.smoker else 0.0
-    children_factor = data.children * 200.0
+    input_data = {
+        "age": data.age,
+        "bmi": data.bmi,
+        "children": data.children,
+        "smoker": data.smoker
+    }
+    predicted_charges = predict_insurance_charges(model, poly, input_data)
 
-    # Calculate the prediction
-    cost_prediction = base_cost + age_factor + bmi_factor + smoker_factor + children_factor
-
-    return PredictResponse(cost_prediction=cost_prediction)
+    return PredictResponse(cost_prediction=predicted_charges)
