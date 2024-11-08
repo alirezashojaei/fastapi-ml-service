@@ -150,3 +150,119 @@ def test_delete_user_not_found(db: Session, client: TestClient):
     response = client.delete("/api/users/99999")  # Assume this ID doesn't exist
     assert response.status_code == 404
     assert response.json() == {"detail": "User not found"}
+
+
+def test_predict_success_smoker(db: Session, client: TestClient):
+    """
+    Test that a cost prediction is successfully returned when valid data is provided for a smoker.
+    """
+    response = client.post(
+        "/predict",
+        json={
+            "smoker": True,
+            "bmi": 28.5,
+            "age": 40,
+            "children": 2
+        }
+    )
+
+    # Check that the response status is 200 OK
+    assert response.status_code == 200
+
+    # Check that the response contains the 'cost_prediction' field
+    response_data = response.json()
+    assert "cost_prediction" in response_data
+    assert isinstance(response_data["cost_prediction"], float)
+
+
+def test_predict_success_non_smoker(db: Session, client: TestClient):
+    """
+    Test that a cost prediction is successfully returned when valid data is provided for a non-smoker.
+    """
+    response = client.post(
+        "/predict",
+        json={
+            "smoker": False,
+            "bmi": 22.0,
+            "age": 25,
+            "children": 1
+        }
+    )
+
+    # Check that the response status is 200 OK
+    assert response.status_code == 200
+
+    # Check that the response contains the 'cost_prediction' field
+    response_data = response.json()
+    assert "cost_prediction" in response_data
+    assert isinstance(response_data["cost_prediction"], float)
+
+
+def test_predict_invalid_age(db: Session, client: TestClient):
+    """
+    Test that the API returns a 422 error when an invalid age is provided.
+    """
+    response = client.post(
+        "/predict",
+        json={
+            "smoker": True,
+            "bmi": 28.5,
+            "age": -5,  # Invalid age
+            "children": 2
+        }
+    )
+
+    # Check that the response status is 422 Unprocessable Entity
+    assert response.status_code == 422
+
+
+def test_predict_invalid_bmi(db: Session, client: TestClient):
+    """
+    Test that the API returns a 422 error when an invalid BMI is provided.
+    """
+    response = client.post(
+        "/predict",
+        json={
+            "smoker": True,
+            "bmi": -1.0,  # Invalid BMI
+            "age": 30,
+            "children": 2
+        }
+    )
+
+    # Check that the response status is 422 Unprocessable Entity
+    assert response.status_code == 422
+
+
+def test_predict_invalid_children(db: Session, client: TestClient):
+    """
+    Test that the API returns a 422 error when an invalid number of children is provided.
+    """
+    response = client.post(
+        "/predict",
+        json={
+            "smoker": False,
+            "bmi": 24.5,
+            "age": 35,
+            "children": -1  # Invalid children count
+        }
+    )
+
+    # Check that the response status is 422 Unprocessable Entity
+    assert response.status_code == 422
+
+
+def test_predict_missing_fields(db: Session, client: TestClient):
+    """
+    Test that the API returns a 422 error when required fields are missing.
+    """
+    response = client.post(
+        "/predict",
+        json={
+            "bmi": 24.5,  # Missing 'smoker', 'age', and 'children' fields
+        }
+    )
+
+    # Check that the response status is 422 Unprocessable Entity
+    assert response.status_code == 422
+
