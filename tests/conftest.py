@@ -15,7 +15,7 @@ admin_engine = create_engine(
 
 # Create an engine and sessionmaker bound to the test database
 engine = create_engine(TEST_SQLALCHEMY_DATABASE_URL)
-TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, expire_on_commit=False, bind=engine)
 TestingScopedSession = scoped_session(TestingSessionLocal)
 
 

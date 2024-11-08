@@ -31,7 +31,6 @@ def create_user(name: str, email: str, age: int = None):
         try:
             session.flush()
             session.refresh(new_user)
-            user_object = copy.copy(new_user)
         except Exception as e:
             raise e
 

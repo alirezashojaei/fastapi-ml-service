@@ -10,7 +10,7 @@ SQLITE_DATABASE_URL = f"sqlite:///{os.path.dirname(os.path.abspath(__file__))}/.
 engine = create_engine(
     SQLITE_DATABASE_URL, echo=True, connect_args={"check_same_thread": False}
 )
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, expire_on_commit=False, bind=engine)
 
 # Create a scoped session
 Session = scoped_session(SessionLocal)
