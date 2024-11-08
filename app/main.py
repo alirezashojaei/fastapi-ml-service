@@ -24,7 +24,7 @@ app.add_middleware(
 app.include_router(user.router, prefix="/api/users", tags=["Users"])
 
 # Include the predict router
-app.include_router(predict.router, prefix="/api")
+app.include_router(predict.router)
 
 
 @app.get("/api/healthcheck")

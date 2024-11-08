@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field
 from typing import Optional
 
 
@@ -10,3 +10,7 @@ class UserResponse(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class PredictResponse(BaseModel):
+    cost_prediction: float = Field(..., description="Predicted health insurance premium cost")
