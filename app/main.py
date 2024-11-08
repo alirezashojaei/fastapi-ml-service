@@ -21,7 +21,7 @@ app.add_middleware(
 )
 
 # Include the user router
-app.include_router(user.router, prefix="/api/users", tags=["Users"])
+app.include_router(user.router, prefix="/api/users", tags=["User"])
 
 # Include the predict router
 app.include_router(predict.router)

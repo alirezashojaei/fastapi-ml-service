@@ -6,10 +6,14 @@ from app.schemas.response_schemas import UserResponse
 router = APIRouter()
 
 
-@router.post("/create", response_model=UserResponse, status_code=201)
+@router.post("/create", response_model=UserResponse, status_code=201, summary="Create a new user", tags=["User"])
 async def create_user_endpoint(user_data: UserCreate):
     """
-    Endpoint to create a new user.
+    Creates a new user in the system.
+
+    - **name**: The user's full name.
+    - **email**: The user's email address (must be a valid format).
+    - **age**: The user's age (optional).
     """
     try:
         user = create_user(
@@ -23,10 +27,12 @@ async def create_user_endpoint(user_data: UserCreate):
     return user
 
 
-@router.get("/{user_id}", response_model=UserResponse)
+@router.get("/{user_id}", response_model=UserResponse, summary="Retrieve a user by ID", tags=["User"])
 async def get_user_endpoint(user_id: int):
     """
-    Endpoint to retrieve a user by ID.
+    Retrieves a user by their unique ID.
+
+    - **user_id**: The ID of the user you want to retrieve.
     """
     user = get_user_by_id(user_id)
     if not user:
@@ -34,10 +40,15 @@ async def get_user_endpoint(user_id: int):
     return user
 
 
-@router.put("/{user_id}", response_model=UserResponse)
+@router.put("/{user_id}", response_model=UserResponse, summary="Update a user's information", tags=["User"])
 async def update_user_endpoint(user_id: int, user_data: UserUpdate):
     """
-    Endpoint to update an existing user's details.
+    Updates an existing user's details by ID.
+
+    - **user_id**: The ID of the user you want to update.
+    - **name**: Updated name of the user (optional).
+    - **email**: Updated email of the user (optional).
+    - **age**: Updated age of the user (optional).
     """
     user = update_user(
         user_id=user_id,
@@ -50,10 +61,12 @@ async def update_user_endpoint(user_id: int, user_data: UserUpdate):
     return user
 
 
-@router.delete("/{user_id}", status_code=204)
+@router.delete("/{user_id}", status_code=204, summary="Delete a user by ID", tags=["User"])
 async def delete_user_endpoint(user_id: int):
     """
-    Endpoint to delete a user by ID.
+    Deletes a user by their unique ID.
+
+    - **user_id**: The ID of the user you want to delete.
     """
     result = delete_user(user_id)
     if not result:
